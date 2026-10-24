@@ -1,1 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f2">
+  <meta name="description" content="Log in or create your Soft Storage account.">
+  <title>Log in — Soft Storage</title>
 
+  <style>
+    :root {
+      --bg: #f5f7f2;
+      --ink: #283b2d;
+      --muted: #657667;
+      --green: #416849;
+      --dark: #304f37;
+      --line: #e1e9dd;
+      --soft: #edf3e9;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px 16px;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 10% 0%, #e5efdf, transparent 32rem),
+        radial-gradient(ellipse at 100% 100%, #e7efdf, transparent 32rem),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    button, input { font: inherit; }
+
+    button, a, input { -webkit-tap-highlight-color: transparent; }
+
+    :focus-visible {
+      outline: 3px solid #648b61;
+      outline-offset: 3px;
+    }
+
+    .page { width: 100%; max-width: 440px; }
+
+    .brand {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      font-size: 1.15rem;
+      font-weight: 750;
+      letter-spacing: -.04em;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: var(--green);
+      background: #dfeadb;
+    }
+
+    .brand-mark svg { width: 25px; }
+
+    .card {
+      padding: clamp(25px, 6vw, 38px);
+      border: 1px solid rgba(255,255,255,.95);
+      border-radius: 25px;
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 18px 55px rgba(44,72,47,.09);
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-size: .75rem;
+      font-weight: 750;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 12px 0 10px;
+      font-size: clamp(2rem, 8vw, 2.55rem);
+      line-height: 1.1;
+      letter-spacing: -.06em;
+    }
+
+    .intro {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.7;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      padding: 5px;
+      margin-bottom: 25px;
+      border-radius: 13px;
+      background: var(--soft);
+    }
+
+    .tab {
+      padding: 11px 8px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--muted);
+      background: transparent;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .tab[aria-selected="true"] {
+      color: var(--dark);
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(44,72,47,.07);
+    }
+
+    .field { margin-bottom: 17px; }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: .86rem;
+      font-weight: 650;
+    }
+
+    input {
+      width: 100%;
+      min-height: 49px;
+      padding: 12px 14px;
+      border: 1px solid #dce5d8;
+      border-radius: 12px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    input::placeholder { color: #98a397; }
+
+    input:focus {
+      outline: 3px solid #e3edde;
+      border-color: #91b589;
+    }
+
+    .password-wrap { position: relative; }
+
+    .password-wrap input { padding-right: 78px; }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      padding: 5px;
+      border: 0;
+      color: var(--green);
+      background: transparent;
+      font-size: .8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .forgot {
+      display: block;
+      margin: -5px 0 19px;
+      color: var(--green);
+      text-align: right;
+      font-size: .83rem;
+      font-weight: 650;
+    }
+
+    .submit {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 999px;
+      color: white;
+      background: var(--green);
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s ease, transform .18s ease;
+    }
+
+    .submit:hover {
+      background: var(--dark);
+      transform: translateY(-1px);
+    }
+
+    .submit:disabled {
+      cursor: wait;
+      opacity: .7;
+      transform: none;
+    }
+
+    .message {
+      display: none;
+      margin: 16px 0 0;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: .88rem;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .message.show { display: block; }
+
+    .message.error {
+      color: #8a3030;
+      background: #fff0ed;
+    }
+
+    .message.success {
+      color: #305c37;
+      background: #edf6e9;
+    }
+
+    .bottom {
+      margin: 22px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: .87rem;
+    }
+
+    .bottom button {
+      padding: 0;
+      border: 0;
+      color: var(--green);
+      background: transparent;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .back {
+      display: block;
+      width: fit-content;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .back:hover, .forgot:hover { text-decoration: underline; }
+
+    .fine-print {
+      margin: 20px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: .76rem;
+      line-height: 1.6;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <a class="brand" href="index.html" aria-label="Soft Storage home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 4c-8 0-13 3.7-13 10a6 6 0 0 0 6 6c6.3 0 7-8 7-16Z"/>
+          <path d="M4 21c2.8-5 6.1-8.1 11-11"/>
+        </svg>
+      </span>
+      <span>Soft Storage</span>
+    </a>
+
+    <section class="card">
+      <div class="eyebrow">Your space, your way</div>
+      <h1 id="heading">Welcome back.</h1>
+      <p class="intro" id="intro">
+        Log in to return to your notes, ideas, and projects.
+      </p>
+
+      <div class="tabs" role="tablist" aria-label="Account access">
+        <button class="tab" id="loginTab" type="button"
+                role="tab" aria-selected="true"
+                aria-controls="authForm">
+          Log in
+        </button>
+        <button class="tab" id="signupTab" type="button"
+                role="tab" aria-selected="false"
+                aria-controls="authForm">
+          Sign up
+        </button>
+      </div>
+
+      <form id="authForm">
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email"
+                 placeholder="you@example.com"
+                 autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="password-wrap">
+            <input id="password" name="password"
+                   type="password" placeholder="At least 8 characters"
+                   autocomplete="current-password"
+                   minlength="8" required>
+            <button class="toggle-password" id="togglePassword"
+                    type="button" aria-label="Show password">
+              Show
+            </button>
+          </div>
+        </div>
+
+        <a class="forgot" id="forgotLink" href="#reset">
+          Forgot your password?
+        </a>
+
+        <button class="submit" id="submitButton" type="submit">
+          Log in to your space →
+        </button>
+
+        <p class="message" id="message"
+           role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="bottom" id="bottomText">
+        New to Soft Storage?
+        <button id="bottomToggle" type="button">Create an account</button>
+      </p>
+    </section>
+
+    <a class="back" href="index.html">← Back to Soft Storage</a>
+
+    <p class="fine-print">
+      Your personal space for notes, images, ideas, and projects.
+    </p>
+  </main>
+
+  <!-- Supabase JavaScript client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const form = $("authForm");
+  const loginTab = $("loginTab");
+  const signupTab = $("signupTab");
+  const heading = $("heading");
+  const intro = $("intro");
+  const password = $("password");
+  const submitButton = $("submitButton");
+  const message = $("message");
+  const forgotLink = $("forgotLink");
+  const bottomText = $("bottomText");
+  const bottomToggle = $("bottomToggle");
+  const togglePassword = $("togglePassword");
+
+  let mode = "login";
+  let client = null;
+
+  // Set up the interface even if Supabase fails to load.
+  function showMessage(text, type = "error") {
+    message.textContent = text;
+    message.className = "message show " + type;
+  }
+
+  function clearMessage() {
+    message.textContent = "";
+    message.className = "message";
+  }
+
+  function setMode(nextMode, updateHash = true) {
+    mode = nextMode;
+
+    const signup = mode === "signup";
+    const reset = mode === "reset";
+
+    loginTab.setAttribute(
+      "aria-selected", String(mode === "login")
+    );
+    signupTab.setAttribute(
+      "aria-selected", String(signup)
+    );
+
+    heading.textContent = signup
+      ? "Make space for your ideas."
+      : reset ? "Reset your password." : "Welcome back.";
+
+    intro.textContent = signup
+      ? "Create your account and give your thoughts a home."
+      : reset
+        ? "We'll email you a link to reset your password."
+        : "Log in to return to your notes, ideas, and projects.";
+
+    password.closest(".field").hidden = reset;
+    password.required = !reset;
+    password.autocomplete = signup
+      ? "new-password" : "current-password";
+
+    forgotLink.hidden = signup || reset;
+    bottomText.hidden = reset;
+
+    submitButton.textContent = reset
+      ? "Send reset link →"
+      : signup ? "Create my account →"
+      : "Log in to your space →";
+
+    bottomText.firstChild.textContent = signup
+      ? "Already have an account? "
+      : "New to Soft Storage? ";
+
+    bottomToggle.textContent = signup
+      ? "Log in" : "Create an account";
+
+    clearMessage();
+
+    if (updateHash) {
+      history.replaceState(
+        null, "",
+        signup ? "#signup" : reset ? "#reset" : "#login"
+      );
+    }
+  }
+
+  // These controls work without a Supabase connection.
+  loginTab.addEventListener("click", () => setMode("login"));
+  signupTab.addEventListener("click", () => setMode("signup"));
+
+  bottomToggle.addEventListener("click", () => {
+    setMode(mode === "login" ? "signup" : "login");
+  });
+
+  forgotLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    setMode("reset");
+  });
+
+  togglePassword.addEventListener("click", () => {
+    const show = password.type === "password";
+    password.type = show ? "text" : "password";
+    togglePassword.textContent = show ? "Hide" : "Show";
+    togglePassword.setAttribute(
+      "aria-label", show ? "Hide password" : "Show password"
+    );
+  });
+
+  // Read the URL and key you already entered.
+  const url = "https://wnueqirdsfiwltrcwtpf.supabase.co";
+  const key = "sb_publishable_EWKj8whQLXCWjDppjyO2AQ_ucECD3b6";
+
+  try {
+    if (
+      window.supabase &&
+      typeof window.supabase.createClient === "function"
+    ) {
+      client = window.supabase.createClient(url, key);
+    }
+  } catch (error) {
+    console.error("Supabase initialization failed:", error);
+  }
+
+  // Select the correct tab for landing-page links.
+  const hash = location.hash.toLowerCase();
+
+  setMode(
+    hash === "#signup" ? "signup" :
+    hash === "#reset" ? "reset" : "login",
+    false
+  );
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearMessage();
+
+    if (!client) {
+      showMessage(
+        "The Supabase library did not load. Check your internet connection and reload the page."
+      );
+      return;
+    }
+
+    const email = $("email").value.trim();
+    const passwordValue = password.value;
+
+    if (mode !== "reset" && passwordValue.length < 8) {
+      showMessage("Please use a password of at least 8 characters.");
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Please wait…";
+
+    try {
+      let result;
+
+      if (mode === "signup") {
+        result = await client.auth.signUp({
+          email,
+          password: passwordValue,
+          options: {
+            emailRedirectTo:
+              location.origin + location.pathname
+          }
+        });
+
+        if (result.error) throw result.error;
+
+        showMessage(
+          result.data.session
+            ? "Your account has been created successfully."
+            : "Check your email for a confirmation link to finish creating your account.",
+          "success"
+        );
+
+      } else if (mode === "reset") {
+        result = await client.auth.resetPasswordForEmail(email, {
+          redirectTo:
+            location.origin + location.pathname + "#reset"
+        });
+
+        if (result.error) throw result.error;
+
+        showMessage(
+          "If the account is eligible, password-reset instructions will arrive by email.",
+          "success"
+        );
+
+      } else {
+        result = await client.auth.signInWithPassword({
+          email,
+          password: passwordValue
+        });
+
+        if (result.error) throw result.error;
+
+        showMessage(
+          "Login successful! Your workspace page still needs to be connected.",
+          "success"
+        );
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+      showMessage(error.message || "Something went wrong. Please try again.");
+    } finally {
+      submitButton.disabled = false;
+
+      submitButton.textContent =
+        mode === "signup" ? "Create my account →" :
+        mode === "reset" ? "Send reset link →" :
+        "Log in to your space →";
+    }
+  });
+})();
+</script>
+</body>
+</html>
