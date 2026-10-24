@@ -1,1 +1,1831 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f7f0">
+  <meta name="description" content="Bring your notes, images, ideas and projects together in Soft Storage, a calmer space to organise your thinking and plan what comes next.">
+  <meta name="color-scheme" content="light">
+  <title>Soft Storage — Your thoughts, all in one place</title>
+
+  <style>
+    :root {
+      --bg: #f5f7f2;
+      --surface: #ffffff;
+      --surface-soft: #edf3e9;
+      --ink: #283b2d;
+      --muted: #657667;
+      --green: #416849;
+      --green-dark: #304f37;
+      --green-light: #dfeadb;
+      --line: #e1e9dd;
+      --focus: #648b61;
+      --shadow: 0 12px 40px rgba(44, 72, 47, .07);
+      --shadow-hover: 0 20px 48px rgba(44, 72, 47, .12);
+      --radius: 22px;
+      --container: 1120px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 5% 0%, #e5efdf 0, transparent 34rem),
+        radial-gradient(ellipse at 100% 32%, #edf2e7 0, transparent 32rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    img,
+    svg {
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    a,
+    button {
+      touch-action: manipulation;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .section {
+      padding: 88px 0;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, .82);
+      border: 1px solid rgba(255, 255, 255, .95);
+      box-shadow: var(--shadow);
+    }
+
+    .icon {
+      display: block;
+      width: 22px;
+      height: 22px;
+      flex: 0 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--green);
+      font-size: .76rem;
+      font-weight: 750;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #789b72;
+      box-shadow: 0 0 0 5px #e3edde;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+    }
+
+    .section-heading {
+      max-width: 660px;
+      margin: 0 auto 42px;
+      text-align: center;
+    }
+
+    .section-heading h2,
+    .content-copy h2 {
+      margin: 15px 0;
+      font-size: clamp(2rem, 4.5vw, 3.1rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -.055em;
+    }
+
+    .section-heading p,
+    .content-copy > p {
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    /* Buttons */
+
+    .button {
+      display: inline-flex;
+      min-height: 47px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 12px 20px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: .92rem;
+      font-weight: 650;
+      line-height: 1.3;
+      cursor: pointer;
+      transition:
+        background-color .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+    }
+
+    .button-primary {
+      color: #fff;
+      background: var(--green);
+      box-shadow: 0 6px 16px rgba(65, 104, 73, .16);
+    }
+
+    .button-primary:hover {
+      background: var(--green-dark);
+      box-shadow: 0 10px 24px rgba(65, 104, 73, .2);
+      transform: translateY(-2px);
+    }
+
+    .button-secondary {
+      color: var(--green-dark);
+      background: rgba(255, 255, 255, .8);
+      border-color: #d5e0d0;
+    }
+
+    .button-secondary:hover {
+      background: #fff;
+      border-color: #b8cbb2;
+      transform: translateY(-2px);
+    }
+
+    .button-arrow {
+      font-size: 1.12em;
+      transition: transform .18s ease;
+    }
+
+    .button:hover .button-arrow {
+      transform: translateX(3px);
+    }
+
+    /* Header and navigation */
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(245, 247, 242, .94);
+      border-bottom: 1px solid var(--line);
+    }
+
+    @supports (backdrop-filter: blur(12px)) {
+      .site-header {
+        background: rgba(245, 247, 242, .84);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+      color: var(--ink);
+      font-size: 1.08rem;
+      font-weight: 750;
+      letter-spacing: -.045em;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 39px;
+      height: 39px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 13px;
+      color: var(--green);
+      background: var(--green-light);
+    }
+
+    .brand-mark svg {
+      width: 23px;
+      height: 23px;
+    }
+
+    .brand-image {
+      display: block;
+      width: 175px;
+      height: 44px;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(14px, 2.3vw, 27px);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .nav-links a,
+    .footer-links a {
+      transition: color .18s ease;
+    }
+
+    .nav-links a:hover,
+    .footer-links a:hover {
+      color: var(--green-dark);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .mobile-menu {
+      display: none;
+      width: 43px;
+      height: 43px;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      color: var(--green-dark);
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .mobile-menu svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .mobile-nav-panel {
+      display: grid;
+      gap: 4px;
+      padding: 0 20px 16px;
+    }
+
+    .mobile-nav-panel[hidden] {
+      display: none;
+    }
+
+    .mobile-nav-panel a {
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+    }
+
+    .mobile-nav-panel a:hover {
+      color: var(--green-dark);
+      background: var(--surface-soft);
+    }
+
+    /* Hero */
+
+    .hero {
+      padding: 86px 0 60px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.04fr .96fr;
+      align-items: center;
+      gap: clamp(38px, 6vw, 78px);
+    }
+
+    h1 {
+      max-width: 620px;
+      margin: 20px 0 22px;
+      font-size: clamp(2.8rem, 5.3vw, 4.65rem);
+      font-weight: 720;
+      line-height: 1.04;
+      letter-spacing: -.067em;
+    }
+
+    h1 span {
+      color: var(--green);
+    }
+
+    .hero-copy {
+      max-width: 520px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .microcopy {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      color: #596e5b;
+      font-size: .84rem;
+    }
+
+    .microcopy svg {
+      width: 17px;
+      height: 17px;
+      color: var(--green);
+      flex: 0 0 auto;
+    }
+
+    /* Workspace illustration */
+
+    .preview-wrap {
+      position: relative;
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid #fff;
+      border-radius: 28px;
+      background: linear-gradient(145deg, #fff, #e4eee0);
+      box-shadow: 0 24px 70px rgba(51, 83, 53, .12);
+    }
+
+    .preview-window {
+      overflow: hidden;
+      padding: 19px;
+      border: 1px solid #e7ede3;
+      border-radius: 19px;
+      background: #fff;
+    }
+
+    .window-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #edf1eb;
+    }
+
+    .window-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cfddc9;
+    }
+
+    .window-label {
+      margin-left: auto;
+      color: #596d5b;
+      font-size: .72rem;
+    }
+
+    .preview-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 18px 0 14px;
+    }
+
+    .preview-heading strong {
+      font-size: 1.06rem;
+      letter-spacing: -.03em;
+    }
+
+    .tiny-pill {
+      padding: 5px 10px;
+      border-radius: 99px;
+      color: var(--green-dark);
+      background: #eaf2e6;
+      font-size: .7rem;
+      font-weight: 700;
+    }
+
+    .preview-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 15px;
+    }
+
+    .preview-tabs span {
+      padding: 5px 9px;
+      border-radius: 99px;
+      color: #536755;
+      background: #f2f5ef;
+      font-size: .7rem;
+    }
+
+    .preview-tabs span:first-child {
+      color: var(--green-dark);
+      background: #e3eddd;
+    }
+
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .note-card {
+      min-width: 0;
+      min-height: 126px;
+      padding: 13px;
+      border: 1px solid #e7ede3;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .note-card.tinted {
+      background: #f1f6ee;
+    }
+
+    .note-icon {
+      display: grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      margin-bottom: 10px;
+      border-radius: 9px;
+      color: var(--green);
+      background: #e2ecdc;
+    }
+
+    .note-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .note-card strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: .8rem;
+      line-height: 1.4;
+    }
+
+    .note-card small {
+      display: block;
+      color: #586d5a;
+      font-size: .72rem;
+      line-height: 1.5;
+    }
+
+    .mini-timeline {
+      display: flex;
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .mini-timeline span {
+      height: 5px;
+      flex: 1;
+      border-radius: 99px;
+      background: #d6e5d0;
+    }
+
+    .mini-timeline span:nth-child(2) {
+      background: #91b589;
+    }
+
+    .floating-tag {
+      position: absolute;
+      right: -13px;
+      bottom: 26px;
+      padding: 11px 14px;
+      border: 1px solid #e6ede2;
+      border-radius: 14px;
+      color: var(--green-dark);
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(53, 82, 55, .12);
+      font-size: .8rem;
+      font-weight: 650;
+    }
+
+    .floating-tag span {
+      margin-right: 5px;
+      color: var(--green);
+    }
+
+    /* Trust strip */
+
+    .trust-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 20px 30px;
+      padding: 22px 0 34px;
+      color: #526853;
+      font-size: .84rem;
+    }
+
+    .trust-strip span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .trust-strip svg {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 auto;
+      color: var(--green);
+    }
+
+    /* Features */
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      min-width: 0;
+      min-height: 250px;
+      padding: 27px;
+      border-radius: var(--radius);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .feature-symbol {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      margin-bottom: 22px;
+      border-radius: 15px;
+      color: var(--green);
+      background: #e7f0e2;
+    }
+
+    .feature-symbol svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 9px;
+      font-size: 1.14rem;
+      line-height: 1.35;
+      letter-spacing: -.025em;
+    }
+
+    .feature-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .feature-foot {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 20px;
+      color: var(--green-dark);
+      font-size: .84rem;
+      font-weight: 650;
+    }
+
+    .feature-foot svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* How it works */
+
+    .how-section {
+      background: rgba(230, 238, 225, .56);
+      border-block: 1px solid #e0e9da;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 30px;
+    }
+
+    .step {
+      padding: 8px 4px;
+    }
+
+    .step-number {
+      display: grid;
+      width: 43px;
+      height: 43px;
+      place-items: center;
+      margin-bottom: 18px;
+      border: 1px solid #cbdcc5;
+      border-radius: 14px;
+      color: var(--green-dark);
+      background: rgba(255, 255, 255, .85);
+      font-size: .88rem;
+      font-weight: 750;
+    }
+
+    .step h3 {
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    /* Second workspace section */
+
+    .preview-section-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      align-items: center;
+      gap: 55px;
+    }
+
+    .content-copy h2 {
+      max-width: 550px;
+    }
+
+    .preview-list {
+      display: grid;
+      gap: 12px;
+      margin: 24px 0 28px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .preview-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #405b45;
+      font-size: .94rem;
+    }
+
+    .preview-list svg {
+      width: 19px;
+      height: 19px;
+      flex: 0 0 auto;
+      margin-top: 4px;
+      color: var(--green);
+    }
+
+    .workspace-demo {
+      min-width: 0;
+      padding: 20px;
+      border-radius: 26px;
+    }
+
+    .demo-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 17px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .demo-top strong {
+      font-size: .97rem;
+    }
+
+    .demo-top small {
+      display: block;
+      color: #596d5b;
+      font-size: .77rem;
+    }
+
+    .demo-avatar {
+      display: grid;
+      width: 37px;
+      height: 37px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--green-dark);
+      background: #e3edde;
+      font-size: .8rem;
+      font-weight: 750;
+    }
+
+    .demo-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .demo-panel {
+      min-width: 0;
+      padding: 15px;
+      border: 1px solid #e4ebe0;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, .8);
+    }
+
+    .demo-panel h4 {
+      margin: 0 0 11px;
+      font-size: .84rem;
+    }
+
+    .demo-line {
+      height: 7px;
+      margin: 8px 0;
+      border-radius: 99px;
+      background: #e8eee5;
+    }
+
+    .demo-line.short { width: 58%; }
+    .demo-line.mid { width: 78%; }
+
+    .demo-image {
+      height: 70px;
+      margin-top: 11px;
+      border-radius: 10px;
+      background: linear-gradient(140deg, #dce9d5, #f1e9d9 55%, #c9d9c4);
+    }
+
+    .demo-task {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 9px 0;
+      color: #465f49;
+      font-size: .72rem;
+    }
+
+    .demo-task i {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 auto;
+      border-radius: 3px;
+      background: #91b589;
+    }
+
+    .demo-task:last-child i {
+      background: #c4b27f;
+    }
+
+    /* Privacy */
+
+    .privacy-card {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      gap: 24px;
+      max-width: 850px;
+      margin-inline: auto;
+      padding: clamp(25px, 5vw, 44px);
+      border-radius: 27px;
+    }
+
+    .privacy-icon {
+      display: grid;
+      width: 55px;
+      height: 55px;
+      place-items: center;
+      border-radius: 17px;
+      color: var(--green);
+      background: #e5efe0;
+    }
+
+    .privacy-icon svg {
+      width: 27px;
+      height: 27px;
+    }
+
+    .privacy-card h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+      line-height: 1.18;
+      letter-spacing: -.05em;
+    }
+
+    .privacy-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .privacy-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: var(--green-dark);
+      font-size: .9rem;
+      font-weight: 650;
+      text-decoration: underline;
+      text-decoration-color: #b6cbb0;
+      text-underline-offset: 4px;
+    }
+
+    /* Final call to action */
+
+    .cta-section {
+      padding: 12px 0 88px;
+    }
+
+    .cta-panel {
+      padding: clamp(32px, 6vw, 60px);
+      border: 1px solid #fff;
+      border-radius: 29px;
+      background: linear-gradient(135deg, #e3eedc, #fff 95%);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .cta-panel h2 {
+      max-width: 650px;
+      margin: 15px auto;
+      font-size: clamp(2rem, 4.5vw, 3.15rem);
+      line-height: 1.1;
+      letter-spacing: -.055em;
+    }
+
+    .cta-panel p {
+      max-width: 530px;
+      margin: 0 auto;
+      color: var(--muted);
+    }
+
+    .cta-panel .hero-actions {
+      justify-content: center;
+    }
+
+    /* Footer */
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .copyright {
+      color: #536853;
+      font-size: .8rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Responsive layouts */
+
+    @media (max-width: 1050px) {
+      .nav-links {
+        gap: 14px;
+        font-size: .83rem;
+      }
+
+      .nav-actions .button {
+        padding-inline: 14px;
+      }
+
+      .hero-grid {
+        gap: 35px;
+      }
+
+      .preview-section-grid {
+        gap: 35px;
+      }
+    }
+
+    @media (min-width: 851px) {
+      .mobile-nav-panel {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: inline-flex;
+      }
+
+      .hero {
+        padding-top: 62px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-copy {
+        max-width: 620px;
+      }
+
+      .preview-wrap {
+        width: 100%;
+        max-width: 600px;
+        margin-inline: auto;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .feature-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .preview-section-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .preview-section-grid > div:first-child {
+        max-width: 650px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: calc(100% - 32px);
+      }
+
+      .section {
+        padding: 65px 0;
+      }
+
+      .nav {
+        min-height: 68px;
+        gap: 10px;
+      }
+
+      .brand {
+        font-size: 1rem;
+        gap: 8px;
+      }
+
+      .brand-mark {
+        width: 35px;
+        height: 35px;
+        border-radius: 11px;
+      }
+
+      .brand-image {
+        width: 135px;
+        height: 38px;
+      }
+
+      .nav-actions {
+        gap: 7px;
+      }
+
+      .nav-actions .button {
+        min-height: 40px;
+        padding: 9px 12px;
+        font-size: .8rem;
+      }
+
+      .nav-actions .button-secondary {
+        display: none;
+      }
+
+      .mobile-menu {
+        width: 39px;
+        height: 39px;
+      }
+
+      .hero {
+        padding: 48px 0 30px;
+      }
+
+      h1 {
+        font-size: clamp(2.6rem, 10.8vw, 3.7rem);
+      }
+
+      .hero-copy {
+        font-size: 1rem;
+        line-height: 1.75;
+      }
+
+      .hero-actions {
+        gap: 10px;
+      }
+
+      .hero-actions .button {
+        padding-inline: 16px;
+      }
+
+      .preview-wrap {
+        padding: 9px;
+      }
+
+      .preview-window {
+        padding: 13px;
+      }
+
+      .note-card {
+        min-height: 115px;
+        padding: 10px;
+      }
+
+      .floating-tag {
+        right: 5px;
+        bottom: 13px;
+        padding: 9px 11px;
+        font-size: .72rem;
+      }
+
+      .trust-strip {
+        justify-content: flex-start;
+        gap: 12px 18px;
+        padding: 20px 0 27px;
+        font-size: .8rem;
+      }
+
+      .section-heading {
+        margin-bottom: 30px;
+      }
+
+      .section-heading p,
+      .content-copy > p {
+        font-size: .97rem;
+      }
+
+      .feature-grid,
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .feature-card,
+      .feature-card:last-child {
+        grid-column: auto;
+        min-height: 0;
+        padding: 23px;
+      }
+
+      .feature-symbol {
+        margin-bottom: 16px;
+      }
+
+      .step {
+        padding: 6px 0;
+      }
+
+      .workspace-demo {
+        padding: 13px;
+      }
+
+      .demo-row {
+        gap: 8px;
+      }
+
+      .demo-panel {
+        padding: 11px;
+      }
+
+      .privacy-card {
+        grid-template-columns: 1fr;
+        gap: 17px;
+      }
+
+      .cta-section {
+        padding-bottom: 60px;
+      }
+
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .brand {
+        gap: 6px;
+        font-size: .91rem;
+      }
+
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+
+      .nav-actions .button-primary {
+        padding-inline: 9px;
+        font-size: .76rem;
+      }
+
+      .note-grid {
+        gap: 7px;
+      }
+
+      .note-card {
+        padding: 8px;
+      }
+
+      .demo-row {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-links {
+        gap: 12px;
+      }
+    }
+
+    @media (hover: none) {
+      .button:hover,
+      .feature-card:hover {
+        transform: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="sr-only" href="#main-content">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="Soft Storage home">
+        <!-- Replace the fallback with your logo when ready. -->
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.7" stroke-linecap="round"
+               stroke-linejoin="round">
+            <path d="M20 4c-8 0-13 3.7-13 10a6 6 0 0 0 6 6c6.3 0 7-8 7-16Z"/>
+            <path d="M4 21c2.8-5 6.1-8.1 11-11"/>
+          </svg>
+        </span>
+        <span>Soft Storage</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#preview">Workspace</a>
+        <a href="#privacy">Privacy</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="button button-secondary" href="login.html">Log in</a>
+        <a class="button button-primary" href="login.html#signup">
+          Get started <span class="button-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button
+          class="mobile-menu"
+          id="mobileMenuButton"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="mobileNav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.8" stroke-linecap="round"
+               aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <nav class="mobile-nav-panel" id="mobileNav"
+         aria-label="Mobile navigation" hidden>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#preview">Workspace</a>
+      <a href="#privacy">Privacy</a>
+      <a href="login.html">Log in</a>
+      <a href="login.html#signup">Create account</a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            Your space, your way
+          </div>
+
+          <h1>
+            A place for everything
+            <span>your mind holds.</span>
+          </h1>
+
+          <p class="hero-copy">
+            Bring your notes, images, ideas, and projects together in one
+            organised space. Capture inspiration, plan what comes next,
+            and give your thoughts room to grow — without everything
+            feeling scattered.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="login.html#signup">
+              Create your space
+              <span class="button-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="button button-secondary" href="#features">
+              Explore the features
+            </a>
+          </div>
+
+          <div class="microcopy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3 19 6v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3Z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            A little more clarity for everything on your mind.
+          </div>
+        </div>
+
+        <div class="preview-wrap"
+             role="img"
+             aria-label="Illustration of a Soft Storage workspace containing sample notes, images, projects, and ideas">
+          <div class="preview-window" aria-hidden="true">
+            <div class="window-top">
+              <span class="window-dot"></span>
+              <span class="window-dot"></span>
+              <span class="window-dot"></span>
+              <span class="window-label">your workspace</span>
+            </div>
+
+            <div class="preview-heading">
+              <strong>Welcome back</strong>
+              <span class="tiny-pill">My space</span>
+            </div>
+
+            <div class="preview-tabs">
+              <span>Everything</span>
+              <span>Notes</span>
+              <span>Projects</span>
+              <span>Ideas</span>
+            </div>
+
+            <div class="note-grid">
+              <div class="note-card tinted">
+                <div class="note-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="1.7" stroke-linejoin="round">
+                    <path d="M6 3h9l4 4v14H6z"/>
+                    <path d="M14 3v5h5M9 12h7M9 16h7"/>
+                  </svg>
+                </div>
+                <strong>Weekly thoughts</strong>
+                <small>Notes and little reminders</small>
+              </div>
+
+              <div class="note-card">
+                <div class="note-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="1.7" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="2"/>
+                    <circle cx="8.5" cy="9" r="1.5"/>
+                    <path d="m21 15-5-5L5 20"/>
+                  </svg>
+                </div>
+                <strong>Inspiration board</strong>
+                <small>Images worth keeping</small>
+              </div>
+
+              <div class="note-card">
+                <div class="note-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="1.7" stroke-linecap="round">
+                    <path d="M4 5h16M4 10h16M4 15h10M4 20h7"/>
+                  </svg>
+                </div>
+                <strong>Website project</strong>
+                <small>Plan, schedule, review</small>
+                <div class="mini-timeline" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+
+              <div class="note-card tinted">
+                <div class="note-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="1.7" stroke-linecap="round">
+                    <path d="M9 18h6M10 22h4M8 14c-1.3-1-2-2.4-2-4a6 6 0 1 1 12 0c0 1.6-.7 3-2 4-.8.7-1 1.3-1 2h-6c0-.7-.2-1.3-1-2Z"/>
+                  </svg>
+                </div>
+                <strong>New idea</strong>
+                <small>A thought to explore later</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="floating-tag">
+            <span aria-hidden="true">✦</span>
+            Everything has its place
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits -->
+    <div class="container trust-strip" aria-label="What you can organise">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" aria-hidden="true">
+          <path d="m5 12 4 4L19 6"/>
+        </svg>
+        Notes and images
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" aria-hidden="true">
+          <path d="m5 12 4 4L19 6"/>
+        </svg>
+        Project planning
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" aria-hidden="true">
+          <path d="m5 12 4 4L19 6"/>
+        </svg>
+        Ideas and inspiration
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" aria-hidden="true">
+          <path d="m5 12 4 4L19 6"/>
+        </svg>
+        One connected workspace
+      </span>
+    </div>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            Thoughtfully organised
+          </div>
+          <h2>Different ways to think. One place to keep them.</h2>
+          <p>
+            From quick notes to bigger ambitions, give every thought a place
+            to land — and a little room to become something more.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card glass">
+            <div class="feature-symbol">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.7" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 3h9l4 4v14H6z"/>
+                <path d="M14 3v5h5M9 12h7M9 16h7"/>
+              </svg>
+            </div>
+            <h3>Notes and images</h3>
+            <p>
+              Keep written notes alongside images and references. Collect
+              useful details and visual inspiration without scattering
+              them across different places.
+            </p>
+            <span class="feature-foot">
+              Collect and connect
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.8" aria-hidden="true">
+                <path d="M5 12h14m-6-6 6 6-6 6"/>
+              </svg>
+            </span>
+          </article>
+
+          <article class="feature-card glass">
+            <div class="feature-symbol">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.7" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 5h16M4 10h16M4 15h10M4 20h7"/>
+                <path d="M17 14v7m-3.5-3.5h7"/>
+              </svg>
+            </div>
+            <h3>Projects with structure</h3>
+            <p>
+              Turn plans into practical next steps. Bring schedules,
+              research, progress, and project notes together to see
+              the bigger picture.
+            </p>
+            <span class="feature-foot">
+              Plan with clarity
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.8" aria-hidden="true">
+                <path d="M5 12h14m-6-6 6 6-6 6"/>
+              </svg>
+            </span>
+          </article>
+
+          <article class="feature-card glass">
+            <div class="feature-symbol">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.7" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 18h6M10 22h4M8 14c-1.3-1-2-2.4-2-4a6 6 0 1 1 12 0c0 1.6-.7 3-2 4-.8.7-1 1.3-1 2h-6c0-.7-.2-1.3-1-2Z"/>
+              </svg>
+            </div>
+            <h3>Ideas worth exploring</h3>
+            <p>
+              Give early thoughts room to grow. Gather possibilities,
+              develop connections, and return to promising ideas when
+              you're ready to take them further.
+            </p>
+            <span class="feature-foot">
+              Make room to explore
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.8" aria-hidden="true">
+                <path d="M5 12h14m-6-6 6 6-6 6"/>
+              </svg>
+            </span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section how-section" id="how">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            A simpler rhythm
+          </div>
+          <h2>Start with a thought. Build from there.</h2>
+          <p>
+            A little structure can go a long way. Start small, find your
+            flow, and let your workspace evolve with you.
+          </p>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <div class="step-number">01</div>
+            <h3>Gather what matters</h3>
+            <p>
+              Capture a note, save an image, or write down an idea
+              while it's still fresh.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">02</div>
+            <h3>Give it a place</h3>
+            <p>
+              Organise your material into notes, projects, or ideas,
+              each with its own purpose.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">03</div>
+            <h3>Build on it over time</h3>
+            <p>
+              Return to your workspace to add context, plan next steps,
+              and see where your thinking takes you.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workspace preview -->
+    <section class="section" id="preview">
+      <div class="container preview-section-grid">
+        <div class="content-copy">
+          <div class="eyebrow">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            A little preview
+          </div>
+          <h2>Made to feel clear, not crowded.</h2>
+          <p>
+            Your workspace brings different kinds of work together
+            without making everything feel like one big to-do list.
+            See what you've collected, find what matters, and focus
+            on what comes next.
+          </p>
+
+          <ul class="preview-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" aria-hidden="true">
+                <path d="m5 12 4 4L19 6"/>
+              </svg>
+              Separate spaces for different kinds of work
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" aria-hidden="true">
+                <path d="m5 12 4 4L19 6"/>
+              </svg>
+              A considered interface with simple navigation
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" aria-hidden="true">
+                <path d="m5 12 4 4L19 6"/>
+              </svg>
+              Room for quick thoughts and bigger plans
+            </li>
+          </ul>
+
+          <a class="button button-primary" href="login.html#signup">
+            Make it your space
+            <span class="button-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="workspace-demo glass"
+             role="img"
+             aria-label="Sample Soft Storage workspace with note collection, project overview, ideas, and saved inspiration">
+          <div class="demo-top">
+            <div>
+              <strong>Your organised space</strong>
+              <small>A sample workspace preview</small>
+            </div>
+            <span class="demo-avatar" aria-hidden="true">SS</span>
+          </div>
+
+          <div class="demo-row" aria-hidden="true">
+            <div class="demo-panel">
+              <h4>Note collection</h4>
+              <div class="demo-line"></div>
+              <div class="demo-line mid"></div>
+              <div class="demo-line short"></div>
+              <div class="demo-image"></div>
+            </div>
+
+            <div class="demo-panel">
+              <h4>Project overview</h4>
+              <div class="demo-task"><i></i> Plan the outline</div>
+              <div class="demo-task"><i></i> Gather references</div>
+              <div class="demo-task"><i></i> Review progress</div>
+              <div class="mini-timeline">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-row" aria-hidden="true">
+            <div class="demo-panel">
+              <h4>Ideas to explore</h4>
+              <div class="demo-line mid"></div>
+              <div class="demo-line short"></div>
+            </div>
+            <div class="demo-panel">
+              <h4>Saved inspiration</h4>
+              <div class="demo-image" style="height:48px;margin-top:0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy -->
+    <section class="section" id="privacy">
+      <div class="container">
+        <div class="privacy-card glass">
+          <div class="privacy-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3 19 6v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3Z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+
+          <div>
+            <h2>Your space should feel like yours.</h2>
+            <p>
+              Your notes, ideas, and projects are personal. Soft Storage
+              is being developed with personal workspaces and account-based
+              access in mind. Clear information about data handling and
+              privacy should be available before you entrust the app
+              with your content.
+            </p>
+            <!-- Add a link to your published privacy policy when available. -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-panel">
+          <div class="eyebrow">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            Make space for what matters
+          </div>
+
+          <h2>Bring your thoughts into one place.</h2>
+          <p>
+            From passing ideas to plans you're ready to pursue,
+            give everything a little more room to grow.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="login.html#signup">
+              Create your space
+              <span class="button-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="button button-secondary" href="login.html">
+              Log in
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <a class="brand" href="#home" aria-label="Soft Storage home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.7" stroke-linecap="round"
+               stroke-linejoin="round">
+            <path d="M20 4c-8 0-13 3.7-13 10a6 6 0 0 0 6 6c6.3 0 7-8 7-16Z"/>
+            <path d="M4 21c2.8-5 6.1-8.1 11-11"/>
+          </svg>
+        </span>
+        <span>Soft Storage</span>
+      </a>
+
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#privacy">Privacy</a>
+        <a href="login.html">Log in</a>
+      </nav>
+
+      <span class="copyright">
+        A little space for everything.
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const button = document.getElementById("mobileMenuButton");
+      const panel = document.getElementById("mobileNav");
+
+      if (!button || !panel) return;
+
+      const setMenuOpen = (isOpen) => {
+        button.setAttribute("aria-expanded", String(isOpen));
+        button.setAttribute(
+          "aria-label",
+          isOpen ? "Close navigation menu" : "Open navigation menu"
+        );
+
+        panel.hidden = !isOpen;
+      };
+
+      button.addEventListener("click", () => {
+        const isOpen =
+          button.getAttribute("aria-expanded") === "true";
+
+        setMenuOpen(!isOpen);
+      });
+
+      panel.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          setMenuOpen(false);
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.key === "Escape" &&
+          button.getAttribute("aria-expanded") === "true"
+        ) {
+          setMenuOpen(false);
+          button.focus();
+        }
+      });
+
+      document.addEventListener("click", (event) => {
+        if (
+          button.getAttribute("aria-expanded") === "true" &&
+          !panel.contains(event.target) &&
+          !button.contains(event.target)
+        ) {
+          setMenuOpen(false);
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 850) {
+          setMenuOpen(false);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
