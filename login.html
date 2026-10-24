@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -371,7 +372,6 @@
   let mode = "login";
   let client = null;
 
-  // Set up the interface even if Supabase fails to load.
   function showMessage(text, type = "error") {
     message.textContent = text;
     message.className = "message show " + type;
@@ -435,7 +435,6 @@
     }
   }
 
-  // These controls work without a Supabase connection.
   loginTab.addEventListener("click", () => setMode("login"));
   signupTab.addEventListener("click", () => setMode("signup"));
 
@@ -448,6 +447,7 @@
     setMode("reset");
   });
 
+  // Keep the original Show/Hide password button.
   togglePassword.addEventListener("click", () => {
     const show = password.type === "password";
     password.type = show ? "text" : "password";
@@ -457,7 +457,6 @@
     );
   });
 
-  // Read the URL and key you already entered.
   const url = "https://wnueqirdsfiwltrcwtpf.supabase.co";
   const key = "sb_publishable_EWKj8whQLXCWjDppjyO2AQ_ucECD3b6";
 
@@ -472,7 +471,6 @@
     console.error("Supabase initialization failed:", error);
   }
 
-  // Select the correct tab for landing-page links.
   const hash = location.hash.toLowerCase();
 
   setMode(
@@ -546,10 +544,9 @@
 
         if (result.error) throw result.error;
 
-        showMessage(
-          "Login successful! Your workspace page still needs to be connected.",
-          "success"
-        );
+        // UPDATED: return to the welcoming homepage after successful login.
+        window.location.href = "index.html";
+        return;
       }
     } catch (error) {
       console.error("Authentication error:", error);
@@ -567,3 +564,4 @@
 </script>
 </body>
 </html>
+
