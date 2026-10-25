@@ -1,1 +1,61 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Soft Storage</title>
+<style>
+:root{--g:#708b72;--d:#405b45;--t:#344638;--m:#788779;--glass:rgba(255,255,255,.48);--border:rgba(255,255,255,.75)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:35px 18px;font:15px Arial,sans-serif;color:var(--t);background:radial-gradient(ellipse at 12% 18%,rgba(170,202,168,.75),transparent 45%),radial-gradient(ellipse at 85% 20%,rgba(239,245,231,.95),transparent 45%),radial-gradient(ellipse at 72% 82%,rgba(150,184,151,.55),transparent 48%),radial-gradient(ellipse at 18% 90%,#fff,transparent 48%),linear-gradient(135deg,#f8faf5,#e4eee1,#f5f7f0);background-attachment:fixed}
+button,input,textarea,select{font:inherit}button{cursor:pointer}.app{max-width:1050px;margin:auto}.glass{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:24px;box-shadow:0 12px 40px #415b4117,inset 0 1px #ffffffcc}
+header{text-align:center;padding:30px 20px;margin-bottom:20px}.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--g)}h1{font:normal clamp(38px,7vw,62px) Georgia,serif;letter-spacing:-2px;color:#425c47;margin:12px 0}.subtitle{font-size:14px;color:var(--m)}
+.toolbar{display:flex;gap:12px;margin-bottom:18px}.search{flex:1;min-width:0}input,textarea,select{width:100%;padding:13px 15px;border:1px solid #708b722e;border-radius:14px;background:#ffffff8c;color:var(--t);outline:none}input:focus,textarea:focus,select:focus{border-color:#587c5b8c}textarea{min-height:140px;resize:vertical}
+.primary{border:0;border-radius:14px;padding:13px 20px;background:linear-gradient(135deg,#829d80,#5e7d62);color:white}.tabs{display:flex;gap:6px;padding:9px;margin-bottom:24px;overflow:auto}.tab{border:1px solid transparent;border-radius:12px;padding:11px 15px;background:transparent;color:#718273;white-space:nowrap}.tab.active{color:var(--d);background:#ffffffbf;border-color:#ffffffd9}
+.heading{display:flex;justify-content:space-between;align-items:center;margin:25px 3px 15px}.heading h2,.note h3,.empty h3{font-family:Georgia,serif;font-weight:normal}.heading h2{font-size:25px;margin:0}.count,.date{font-size:11px;color:#8b9a8b}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:16px}.note{padding:20px;min-height:185px;display:flex;flex-direction:column;overflow-wrap:anywhere;transition:.2s}.note:hover{transform:translateY(-3px)}.top,.bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}.top{margin-bottom:15px}.category{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#5e7b61;background:#d5e6d1a6;padding:6px 10px;border-radius:20px}.fav{border:0;background:none;color:#9aa899;font-size:21px}.fav.yes{color:#b47776}.note h3{font-size:21px;color:var(--d);margin:0 0 10px}.note p{font-size:13px;line-height:1.7;color:#68796a;white-space:pre-wrap;margin:0}.bottom{margin-top:auto;padding-top:22px}.actions{display:flex;gap:6px}.small,.cancel{border:1px solid #708b722e;border-radius:9px;padding:7px 10px;background:#ffffff80;color:#607761;font-size:11px}.delete{color:#a56d6b}.empty{grid-column:1/-1;text-align:center;padding:55px 20px;color:#809181}.empty h3{font-size:23px;color:#526d55;margin:10px 0}.empty p{font-size:13px;line-height:1.6}
+dialog{width:min(500px,calc(100% - 28px));padding:0;border:1px solid #ffffffcc;border-radius:24px;background:#f5f9f2f5;color:var(--t);box-shadow:0 25px 80px #2c422d38}dialog::backdrop{background:#30433133;backdrop-filter:blur(5px)}.form{padding:25px}.form h2{font:normal 27px Georgia,serif;margin:0 0 22px}.field{margin-bottom:15px}.field label{display:block;font-size:12px;color:#6c806e;margin-bottom:8px}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}.cancel{font-size:14px;padding:12px 18px;background:transparent}footer{text-align:center;padding:30px 10px 10px;color:#8a9a89;font-size:11px}
+@media(max-width:520px){body{padding:18px 12px}.tabs{gap:3px}.tab{padding:10px 12px;font-size:12px}.toolbar .primary{white-space:nowrap}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="glass"><div class="eyebrow">Your little corner of the internet</div><h1>Soft Storage</h1><p class="subtitle">A quiet place for everything on your mind.</p></header>
+<div class="toolbar"><input class="search" id="search" type="search" placeholder="Search your little universe..." aria-label="Search notes"><button class="primary" id="add">+ New note</button></div>
+<nav class="tabs glass" aria-label="Categories"><button class="tab active" data-cat="Everything">Everything</button><button class="tab" data-cat="Notes">Notes</button><button class="tab" data-cat="Projects">Projects</button><button class="tab" data-cat="Ideas">Ideas</button><button class="tab" data-cat="Favorites">♥ Favorites</button></nav>
+<section><div class="heading"><h2 id="heading">Everything</h2><span class="count" id="count">0 notes</span></div><div class="grid" id="grid"></div></section>
+<footer>Made for your thoughts, plans, and daydreams ✧</footer>
+</main>
+<dialog id="dialog"><form class="form" id="form"><h2 id="formTitle">Create a note</h2><div class="field"><label for="title">Title</label><input id="title" maxlength="100" placeholder="A little thought..." required></div><div class="field"><label for="category">Category</label><select id="category"><option>Notes</option><option>Projects</option><option>Ideas</option></select></div><div class="field"><label for="content">Your thoughts</label><textarea id="content" maxlength="10000" placeholder="Write anything you want..."></textarea></div><div class="dialog-actions"><button type="button" class="cancel" id="cancel">Cancel</button><button class="primary">Save note</button></div></form></dialog>
+<script>
+const $=id=>document.getElementById(id),key="soft-storage-notes-v1";
+let notes=[];try{notes=JSON.parse(localStorage.getItem(key))||[]}catch{}if(!Array.isArray(notes))notes=[];
+let cat="Everything",editing=null;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const save=()=>{try{localStorage.setItem(key,JSON.stringify(notes))}catch{alert("Could not save notes in this browser.")}};
+const date=n=>{const d=new Date(n);return isNaN(d)?"":d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})};
+function render(){
+ const q=$("search").value.trim().toLowerCase(),items=notes.filter(n=>(cat==="Everything"||cat==="Favorites"&&n.favorite||n.category===cat)&&((n.title||"").toLowerCase().includes(q)||(n.content||"").toLowerCase().includes(q))).sort((a,b)=>b.updatedAt-a.updatedAt);
+ $("heading").textContent=cat;$("count").textContent=`${items.length} ${items.length===1?"note":"notes"}`;
+ $("grid").innerHTML=items.length?items.map(n=>`<article class="note glass"><div class="top"><span class="category">${esc(n.category)}</span><button class="fav ${n.favorite?"yes":""}" data-do="fav" data-id="${esc(n.id)}" aria-label="Toggle favorite">${n.favorite?"♥":"♡"}</button></div><h3>${esc(n.title)}</h3><p>${esc(n.content)}</p><div class="bottom"><span class="date">${date(n.updatedAt)}</span><div class="actions"><button class="small" data-do="edit" data-id="${esc(n.id)}">Edit</button><button class="small delete" data-do="del" data-id="${esc(n.id)}">Delete</button></div></div></article>`).join(""):`<div class="empty glass"><div>✧</div><h3>Nothing here just yet</h3><p>This little space is waiting for your next thought.<br>Create a note to get started.</p></div>`;
+}
+function openNote(n=null){
+ editing=n?.id||null;$("form").reset();$("formTitle").textContent=n?"Edit your note":"Create a note";
+ if(n){$("title").value=n.title;$("category").value=n.category;$("content").value=n.content||""}
+ $("dialog").showModal();$("title").focus();
+}
+$("add").onclick=()=>openNote();$("cancel").onclick=()=>$("dialog").close();$("search").oninput=render;
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{cat=b.dataset.cat;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));render()});
+$("form").onsubmit=e=>{e.preventDefault();const title=$("title").value.trim();if(!title)return;const now=Date.now(),data={title,category:$("category").value,content:$("content").value.trim(),updatedAt:now};
+ if(editing)notes=notes.map(n=>n.id===editing?{...n,...data}:n);else notes.push({id:now.toString(36)+Math.random().toString(36).slice(2),...data,favorite:false,createdAt:now});
+ save();render();$("dialog").close();
+};
+$("grid").onclick=e=>{const b=e.target.closest("button[data-do]");if(!b)return;const n=notes.find(n=>n.id===b.dataset.id);if(!n)return;
+ if(b.dataset.do==="edit")openNote(n);
+ if(b.dataset.do==="fav"){n.favorite=!n.favorite;n.updatedAt=Date.now();save();render()}
+ if(b.dataset.do==="del"&&confirm(`Delete "${n.title}"? This cannot be undone.`)){notes=notes.filter(x=>x.id!==n.id);save();render()}
+};
+render();
+</script>
+</body>
+</html>
+
